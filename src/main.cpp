@@ -2,8 +2,8 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 
-const char ssid[] = "shelly1-12BA14";
-const char password[] = "shellyAP";
+const char ssid[] = "shelly1-xxxxxx";
+const char password[] = "xxxxxAP";
 const char schalter_on[] = "http://192.168.33.1/relay/0?turn=on";
 const char schalter_off[] = "http://192.168.33.1/relay/0?turn=off";
 
