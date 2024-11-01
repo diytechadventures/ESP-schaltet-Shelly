@@ -1,4 +1,5 @@
-Die vollständige Beschreibung find3est du unter: https://diytechadventures.de/smartphone-schaltet-shelly/
+Die vollständige Beschreibung findest du unter: 
+https://diytechadventures.de/smartphone-schaltet-shelly/
 
 ESP32 schaltet einen Shelly
 
