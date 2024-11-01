@@ -1,3 +1,5 @@
+Die vollständige Beschreibung find3est du unter: https://diytechadventures.de/smartphone-schaltet-shelly/
+
 ESP32 schaltet einen Shelly
 
 Aufgabe war es eine drahtlose Verbindung zu schaffen, um einen Shelly per AP oder WLAN STA Schaltbefehle senden zu können.
