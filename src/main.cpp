@@ -1,28 +1,39 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
+#include <WebServer.h>
 
-const char ssid[] = "shelly1-12BA14";
-const char password[] = "shellyAP";
-const char schalter_on[] = "http://192.168.33.1/relay/0?turn=on";
-const char schalter_off[] = "http://192.168.33.1/relay/0?turn=off";
+const char ssid[] = "xxxxxx";
+const char password[] = "xxxxxxxxxxxxxx";
+const char shelly_ip[] = "192.xxx.x.xxx"; // Beispiel IP-Adresse des Shelly im Heimnetzwerk
+
+String schalter_on = "/relay/0?turn=on";
+String schalter_off = "/relay/0?turn=off";
+
+WebServer server(80);
 
 // put function declarations here:
 void begin_wlan_client();
-String http_Post_Request(const char* url);
+String http_Post_Request(const String& url);
 void heizung_ein();
 void heizung_aus();
+void handle_root();
+void handle_heizung_ein();
+void handle_heizung_aus();
 
 void setup() {
   begin_wlan_client(); // WLAN-Verbindung starten
+
+  // Webserver-Endpunkte definieren
+  server.on("/", handle_root);
+  server.on("/ein", handle_heizung_ein);
+  server.on("/aus", handle_heizung_aus);
+  server.begin();
+  Serial.println("Webserver gestartet.");
 }
 
 void loop() {
-  // Beispiel für das Einschalten und Ausschalten der Heizung
-  heizung_ein();
-  delay(10000); // Warte 5 Sekunden
-  heizung_aus();
-  delay(10000); // Warte 5 Sekunden
+  server.handleClient();
 }
 
 // put function definitions here:
@@ -32,7 +43,7 @@ void begin_wlan_client() {
 
   Serial.println("Verbindung zum WLAN herstellen...");
 
-  // Wartet, bis der ESP32 mit dem Shelly-WLAN verbunden ist
+  // Wartet, bis der ESP32 mit dem Heim-WLAN verbunden ist
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
@@ -42,9 +53,10 @@ void begin_wlan_client() {
   Serial.println(WiFi.localIP());
 }
 
-String http_Post_Request(const char* url) {
+String http_Post_Request(const String& url) {
   HTTPClient http;
-  http.begin(url); // Starte die HTTP-Verbindung
+  String fullUrl = "http://" + String(shelly_ip) + url;
+  http.begin(fullUrl); // Starte die HTTP-Verbindung
 
   int httpResponseCode = http.GET(); // Sende HTTP GET-Anfrage
 
@@ -100,3 +112,26 @@ void heizung_aus() { // Funktion zum Ausschalten der Heizung
     Serial.println();
   }
 }
+
+void handle_root() {
+  String html = "<html><body style='text-align: center; display: flex; flex-direction: column; justify-content: center; height: 100vh;'>";
+  html += "<div style='margin-top: 10%;'>";
+  html += "<h1 style='text-align: center;'>ESP schaltet Shelly</h1>";
+  html += "<button style='font-size: 24px; width: 200px; height: 100px; background-color: green; color: white; margin: 20px;' onclick=\"location.href='/ein'\">Ein</button>";
+  html += "<button style='font-size: 24px; width: 200px; height: 100px; background-color: red; color: white; margin: 20px;' onclick=\"location.href='/aus'\">Aus</button>";
+  html += "<p id='status' style='font-size: 24px; margin-top: 40px;'></p>";
+  html += "</div>";
+  html += "</body></html>";
+  server.send(200, "text/html", html);
+}
+
+void handle_heizung_ein() {
+  heizung_ein();
+  server.send(200, "text/html", "<html><body style='text-align: center; display: flex; flex-direction: column; justify-content: center; height: 100vh;'><div style='margin-top: 10%;'><h1>ESP schaltet Shelly</h1><p style='font-size: 24px; margin-top: 40px;'>Shelly Relais eingeschaltet</p><a href='/'>Zur&uuml;ck</a></div></body></html>");
+}
+
+void handle_heizung_aus() {
+  heizung_aus();
+  server.send(200, "text/html", "<html><body style='text-align: center; display: flex; flex-direction: column; justify-content: center; height: 100vh;'><div style='margin-top: 10%;'><h1>ESP schaltet Shelly</h1><p style='font-size: 24px; margin-top: 40px;'>Shelly Relais ist ausgeschaltet</p><a href='/'>Zur&uuml;ck</a></div></body></html>");
+}
+
