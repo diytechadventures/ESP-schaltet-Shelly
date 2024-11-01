@@ -1,10 +1,11 @@
+// Erforderliche Bibliotheken einbinden
 #include <Arduino.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <WebServer.h>
 
-const char ssid[] = "xxxxxx";
-const char password[] = "xxxxxxxxxxxxxx";
+const char ssid[] = "xxxxx"; //dein WLAN Name
+const char password[] = "xxxxxxxxxxxxx"; // dein WLAN Passwort
 const char shelly_ip[] = "192.xxx.x.xxx"; // Beispiel IP-Adresse des Shelly im Heimnetzwerk
 
 String schalter_on = "/relay/0?turn=on";
@@ -134,4 +135,3 @@ void handle_heizung_aus() {
   heizung_aus();
   server.send(200, "text/html", "<html><body style='text-align: center; display: flex; flex-direction: column; justify-content: center; height: 100vh;'><div style='margin-top: 10%;'><h1>ESP schaltet Shelly</h1><p style='font-size: 24px; margin-top: 40px;'>Shelly Relais ist ausgeschaltet</p><a href='/'>Zur&uuml;ck</a></div></body></html>");
 }
-
