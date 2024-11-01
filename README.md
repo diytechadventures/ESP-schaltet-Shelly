@@ -1,6 +1,6 @@
 ESP32 schaltet einen Shelly
 
-Aufgabe war es eine drahtlose Verbindung zu schaffen, um einen Shelly per AP Schaltbefehle senden zu können.
+Aufgabe war es eine drahtlose Verbindung zu schaffen, um einen Shelly per AP oder WLAN STA Schaltbefehle senden zu können.
 Wichtig ist, dass der Responsecode ausgewertet werden kann, um eine aktive Rückmeldung des sicheren Schaltens zu gewährleisten.
 
 Das Ergebnis ist ein ESP32-basierter Webserver, der eine einfache und intuitive Weboberfläche bietet, um das Shelly Relais zu steuern. 
